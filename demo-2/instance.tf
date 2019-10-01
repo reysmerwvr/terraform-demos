@@ -9,7 +9,7 @@ resource "aws_instance" "example" {
   key_name = "${aws_key_pair.mykey.key_name}"
   user_data = "${file("script.sh")}"
   tags = {
-    name = "rvalle"
+    Name = "rvalle"
   }
 /*
   provisioner "file" {

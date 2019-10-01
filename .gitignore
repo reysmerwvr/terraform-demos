@@ -37,6 +37,8 @@
 
 # SSH Keys
 */*.pem
+*/mykey
+*/mykey.pub
 
 # Backup files
 */*.bak
