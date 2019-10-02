@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo su -l ec2-user
+sudo su -l
 # Update dependencies
 sudo yum -y update
 sudo yum -y upgrade
@@ -18,7 +18,8 @@ sudo service puppetserver start
 #sudo service puppet start
 ###### Install Foreman ######
 sudo yum -y install http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-sudo yum -y install https://yum.theforeman.org/releases/1.22/el7/x86_64/foreman-release.rpm
+sudo yum -y install https://yum.theforeman.org/releases/1.23/el7/x86_64/foreman-release.rpm
 sudo yum -y install foreman-installer
 # Running the installer
 sudo foreman-installer
+sudo puppet agent --test

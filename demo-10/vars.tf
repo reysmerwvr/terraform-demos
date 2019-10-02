@@ -10,8 +10,11 @@ variable "PATH_TO_PUBLIC_KEY" {
 variable "AMIS" {
   type = "map"
   default = {
-    us-east-1 = "ami-0063927a"
-    us-west-2 = "ami-000b133338f7f4255"
-    us-west-1 = "ami-0f62aafc6efe8fd7b"
+    us-east-1 = "ami-0ff8a91507f77f867"
+    us-west-2 = "ami-a0cfeed8"
+    us-west-1 = "ami-0bdb828fd58c52235"
   }
+}
+variable "INSTANCE_DEVICE_NAME" {
+  default = "/dev/xvdh"
 }
