@@ -1,12 +1,12 @@
 data "template_file" "init-script" {
   template = "${file("scripts/init.cfg")}"
-  vars {
+  vars = {
     REGION = "${var.AWS_REGION}"
   }
 }
 data "template_file" "shell-script" {
   template = "${file("scripts/volumes.sh")}"
-  vars {
+  vars = {
     DEVICE = "${var.INSTANCE_DEVICE_NAME}"
   }
 }
