@@ -35,10 +35,12 @@ sudo yum -y update
 sudo rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
 
 # install jenkins
-sudo yum -y install jenkins=${JENKINS_VERSION} wget unzip
+sudo yum -y install jenkins docker wget unzip
+
+sudo usermod -a -G docker ec2-user
 
 # install pip
-sudo curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py" # wget -q -O - https://bootstrap.pypa.io/get-pip.py
+sudo curl -O https://bootstrap.pypa.io/get-pip.py # wget -q -O - https://bootstrap.pypa.io/get-pip.py
 sudo python3 get-pip.py
 sudo rm -f get-pip.py
 
@@ -46,12 +48,13 @@ sudo rm -f get-pip.py
 sudo pip install awscli
 
 # install terraform
-#wget -q https://releases.hashicorp.com/terraform/$${TERRAFORM_VERSION}/terraform_$${TERRAFORM_VERSION}_linux_amd64.zip
+#wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_$${TERRAFORM_VERSION}_linux_amd64.zip
 sudo curl "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" -o "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" \
 && sudo unzip -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/local/bin \
 && sudo rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 
 # install packer
+#wget -q https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip
 sudo curl "https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip" -o "packer_${PACKER_VERSION}_linux_amd64.zip" \
 && sudo unzip packer_${PACKER_VERSION}_linux_amd64.zip -d /usr/local/bin \
 && sudo rm packer_${PACKER_VERSION}_linux_amd64.zip
@@ -61,5 +64,7 @@ cd /usr/local/bin
 sudo yum clean all
 
 # start jenkins
+sudo service docker start
 sudo service jenkins start
 sudo chkconfig jenkins on
+sudo chkconfig docker on

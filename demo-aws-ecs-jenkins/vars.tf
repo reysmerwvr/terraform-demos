@@ -10,6 +10,21 @@ variable "PATH_TO_PUBLIC_KEY" {
   default = "mykey.pub"
 }
 
+variable "ECS_INSTANCE_TYPE" {
+  default = "t2.micro"
+}
+
+variable "ECS_AMIS" {
+  type = map(string)
+  default = {
+    us-east-1 = "ami-084f07d75acedcefa"
+    us-west-2 = "ami-0ab0050d945a2d795"
+    us-west-1 = "ami-056e733017f14ab33"
+  }
+}
+
+# Full List: http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-optimized_AMI.html
+
 variable "AMIS" {
   type = map(string)
   default = {
@@ -33,9 +48,5 @@ variable "TERRAFORM_VERSION" {
 
 variable "PACKER_VERSION" {
   default = "0.12.9"
-}
-
-variable "APP_INSTANCE_COUNT" {
-  default = "0"
 }
 
