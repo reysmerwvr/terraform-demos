@@ -26,18 +26,16 @@ mkdir -p /var/lib/jenkins
 echo '/dev/data/volume1 /var/lib/jenkins ext4 defaults 0 0' >> /etc/fstab
 mount /var/lib/jenkins
 
-# install dependencies
-sudo yum -y install python36 java-1.8.0-openjdk-devel
-
 # jenkins repository
 sudo curl --silent --location http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo | sudo tee /etc/yum.repos.d/jenkins.repo
 sudo yum -y update
 sudo rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
 
-# install jenkins
-sudo yum -y install jenkins docker wget unzip
+# install jenkins, docker, wget, unzip
+sudo yum -y install java-1.8.0-openjdk-devel python36 jenkins docker wget unzip git
 
 sudo usermod -a -G docker ec2-user
+sudo usermod -a -G docker jenkins
 
 # install pip
 sudo curl -O https://bootstrap.pypa.io/get-pip.py # wget -q -O - https://bootstrap.pypa.io/get-pip.py
@@ -47,20 +45,31 @@ sudo rm -f get-pip.py
 # install awscli
 sudo pip install awscli
 
+# remove java 7
+sudo yum -y remove java
+
+# download and install java 8
+sudo wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.tar.gz"
+sudo tar -xzvf jdk-8u131-linux-x64.tar.gz
+rm -rf jdk-8u131-linux-x64.tar.gz
+
+# configure JAVA_HOME
+sudo printf "\nalias cls='clear'\nexport JAVA_HOME=~/jdk1.8.0_131\nexport JRE_HOME=~/jdk1.8.0_131/jre\nexport PATH=$PATH:/usr/local/bin:~/jdk1.8.0_131/bin:/~/jdk1.8.0_131/jre/bin" >> ~/.bashrc
+source ~/.bashrc
+
 # install terraform
-#wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_$${TERRAFORM_VERSION}_linux_amd64.zip
-sudo curl "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" -o "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" \
-&& sudo unzip -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/local/bin \
+sudo wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
+#sudo curl `https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip` -o `terraform_${TERRAFORM_VERSION}_linux_amd64.zip` \
+&& sudo unzip -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/bin \
 && sudo rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 
 # install packer
-#wget -q https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip
-sudo curl "https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip" -o "packer_${PACKER_VERSION}_linux_amd64.zip" \
-&& sudo unzip packer_${PACKER_VERSION}_linux_amd64.zip -d /usr/local/bin \
+sudo wget -q https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip \
+#sudo curl `https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip` -o `packer_${PACKER_VERSION}_linux_amd64.zip` \
+&& sudo unzip packer_${PACKER_VERSION}_linux_amd64.zip -d /usr/bin \
 && sudo rm packer_${PACKER_VERSION}_linux_amd64.zip
 
 # clean up
-cd /usr/local/bin
 sudo yum clean all
 
 # start jenkins

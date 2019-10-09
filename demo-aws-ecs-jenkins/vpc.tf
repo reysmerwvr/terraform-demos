@@ -80,7 +80,9 @@ resource "aws_subnet" "main-private-3" {
 # Internet GW
 resource "aws_internet_gateway" "main-gw" {
   vpc_id = aws_vpc.main.id
-
+  lifecycle {
+    create_before_destroy = true
+  }
   tags = {
     Name = "main"
   }

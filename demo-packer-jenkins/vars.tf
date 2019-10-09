@@ -32,7 +32,7 @@ variable "TERRAFORM_VERSION" {
 }
 
 variable "PACKER_VERSION" {
-  default = "0.12.9"
+  default = "1.4.4"
 }
 
 variable "APP_INSTANCE_COUNT" {

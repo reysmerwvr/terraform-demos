@@ -13,6 +13,10 @@ resource "aws_instance" "jenkins-instance" {
 
   # user data
   user_data = data.template_cloudinit_config.cloudinit-jenkins.rendered
+
+  tags = {
+    Name = "rvalle"
+  }
 }
 
 resource "aws_ebs_volume" "jenkins-data" {
